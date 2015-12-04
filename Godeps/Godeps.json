@@ -1,0 +1,10 @@
+{
+	"ImportPath": "github.com/hidu/tool/go/redis",
+	"GoVersion": "go1.5.1",
+	"Deps": [
+		{
+			"ImportPath": "github.com/cupcake/rdb",
+			"Rev": "3454dcabd33cb8ea8261ffd6a45f4d836eb504cc"
+		}
+	]
+}
