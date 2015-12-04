@@ -4,7 +4,8 @@ parse redis rdb file
 
 ## install
 ```
-go install github.com/hidu/rdb-viewer
+export GO15VENDOREXPERIMENT=1
+go get -u github.com/hidu/rdb-viewer
 ```
 
 ## useage
