@@ -5,6 +5,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"github.com/cupcake/rdb"
@@ -12,6 +13,9 @@ import (
 	"os"
 	"strings"
 )
+
+var version = "0.3 20160513"
+var jsonType = flag.Bool("json", false, "print as json")
 
 const (
 	kTypeString    string = "string"
@@ -43,12 +47,27 @@ func (p *decoder) StartDatabase(n int) {
 	p.db = n
 }
 
+type jsonStruct map[string]interface{}
+
+func (js jsonStruct) String() string {
+	bs, _ := json.Marshal(js)
+	return string(bs)
+}
+
 func (p *decoder) Set(key, value []byte, expiry int64) {
 	if kTypePrint[kTypeString] {
 		if printValue {
-			fmt.Printf("%s\t%q\t%d\tvalue:\t%q\texpiry:\t%d\n", kTypeString, key, len(value), value, expiry)
+			if *jsonType {
+				fmt.Println(jsonStruct{"type": kTypeString, "key_b": key, "value_b": value, "expiry": expiry, "value_len": len(value)})
+			} else {
+				fmt.Printf("%s\t%q\t%d\tvalue:\t%q\texpiry:\t%d\n", kTypeString, key, len(value), value, expiry)
+			}
 		} else {
-			fmt.Printf("%s\t%q\t%d\n", kTypeString, key, len(value))
+			if *jsonType {
+				fmt.Println(jsonStruct{"type": kTypeString, "key_b": key, "expiry": expiry, "value_len": len(value)})
+			} else {
+				fmt.Printf("%s\t%q\t%d\n", kTypeString, key, len(value))
+			}
 		}
 	}
 }
@@ -56,9 +75,17 @@ func (p *decoder) Set(key, value []byte, expiry int64) {
 func (p *decoder) Hset(key, field, value []byte) {
 	if kTypePrint[kTypeHset] {
 		if printValue {
-			fmt.Printf("%s\t%q\t%d\tfield:\t%q\tvalue:\t%q\t\n", kTypeHset, key, len(field)+len(value), field, value)
+			if *jsonType {
+				fmt.Println(jsonStruct{"type": kTypeHset, "key_b": key, "value_b": value, "field": field, "value_len": len(value)})
+			} else {
+				fmt.Printf("%s\t%q\t%d\tfield:\t%q\tvalue:\t%q\t\n", kTypeHset, key, len(field)+len(value), field, value)
+			}
 		} else {
-			fmt.Printf("%s\t%q\t%d\n", kTypeHset, key, len(field)+len(value))
+			if *jsonType {
+				fmt.Println(jsonStruct{"type": kTypeHset, "key_b": key, "field_b": field, "value_len": len(value)})
+			} else {
+				fmt.Printf("%s\t%q\t%d\n", kTypeHset, key, len(field)+len(value))
+			}
 		}
 	}
 }
@@ -66,9 +93,17 @@ func (p *decoder) Hset(key, field, value []byte) {
 func (p *decoder) Sadd(key, member []byte) {
 	if kTypePrint[kTypeSet] {
 		if printValue {
-			fmt.Printf("%s\t%q\t%d\tmember:\t%q\n", kTypeSet, key, len(member), member)
+			if *jsonType {
+				fmt.Println(jsonStruct{"type": kTypeSet, "key_b": key, "member_b": member, "value_len": len(member)})
+			} else {
+				fmt.Printf("%s\t%q\t%d\tmember:\t%q\n", kTypeSet, key, len(member), member)
+			}
 		} else {
-			fmt.Printf("%s\t%q\t%d\n", kTypeSet, key, len(member))
+			if *jsonType {
+				fmt.Println(jsonStruct{"type": kTypeSet, "key_b": key, "value_len": len(member)})
+			} else {
+				fmt.Printf("%s\t%q\t%d\n", kTypeSet, key, len(member))
+			}
 		}
 	}
 }
@@ -80,9 +115,17 @@ func (p *decoder) StartList(key []byte, length, expiry int64) {
 func (p *decoder) Rpush(key, value []byte) {
 	if kTypePrint[kTypeList] {
 		if printValue {
-			fmt.Printf("%s\t%q\t%d\tvalue:\t%q\n", kTypeList, key, len(value), value)
+			if *jsonType {
+				fmt.Println(jsonStruct{"type": kTypeList, "key_b": key, "value_b": value, "value_len": len(value)})
+			} else {
+				fmt.Printf("%s\t%q\t%d\tvalue:\t%q\n", kTypeList, key, len(value), value)
+			}
 		} else {
-			fmt.Printf("%s\t%q\t%d\n", kTypeList, key, len(value))
+			if *jsonType {
+				fmt.Println(jsonStruct{"type": kTypeList, "key_b": key, "value_len": len(value)})
+			} else {
+				fmt.Printf("%s\t%q\t%d\n", kTypeList, key, len(value))
+			}
 		}
 	}
 	p.i++
@@ -95,9 +138,17 @@ func (p *decoder) StartZSet(key []byte, cardinality, expiry int64) {
 func (p *decoder) Zadd(key []byte, score float64, member []byte) {
 	if kTypePrint[kTypeSortedSet] {
 		if printValue {
-			fmt.Printf("%s\t%s\t%d\tscore:\t%f\tmember:\t%q\n", kTypeSortedSet, string(key), len(member), score, member)
+			if *jsonType {
+				fmt.Println(jsonStruct{"type": kTypeSortedSet, "key_b": key, "member_b": member, "score": score, "value_len": len(member)})
+			} else {
+				fmt.Printf("%s\t%s\t%d\tscore:\t%f\tmember:\t%q\n", kTypeSortedSet, string(key), len(member), score, member)
+			}
 		} else {
-			fmt.Printf("%s\t%s\t%d\n", kTypeSortedSet, string(key), len(member))
+			if *jsonType {
+				fmt.Println(jsonStruct{"type": kTypeSortedSet, "key_b": key, "score": score, "value_len": len(member)})
+			} else {
+				fmt.Printf("%s\t%s\t%d\n", kTypeSortedSet, string(key), len(member))
+			}
 		}
 	}
 	p.i++
@@ -113,8 +164,6 @@ func maybeFatal(err error) {
 var printTypes string
 
 var typesAll []string
-
-var version = "0.2 20151204"
 
 func init() {
 	for kt := range allKeyTypes {

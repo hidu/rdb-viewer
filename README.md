@@ -1,5 +1,6 @@
 # rdb-viewer
-parse redis rdb file
+
+redis rdb文件解析工具  v0.3
 
 
 ## install
@@ -9,6 +10,8 @@ go get -u github.com/hidu/rdb-viewer
 ```
 
 ## useage
+
+### 基本用法
 ```
 $ rdb-viewer dump.rdb
 hset    "xxxxx1" 6
@@ -31,5 +34,32 @@ string  "xxx:sms:counter"  1       value:  "1"     expiry: 0
 ```
 
 如上 第三列以后是 key： value 格式  
+
+### 输出json，使用其他脚本处理
+
+```
+rdb_viewer -json -val hd.rdb|php script/parse.php 
+```
+
+
+[script/parse.php](srcipt/parse.php) 的内容大致如下
+```php
+<?php
+while(!feof(STDIN)){
+    $line=fgets(STDIN);
+    $obj=json_decode($line,true);
+    if(is_array($obj)){
+        foreach ($obj as $k=>$v){
+            if(strpos($k,"_b")){
+                $obj[substr($k, 0,strlen($k)-2)]=base64_decode($v);
+                unset($obj[$k]);
+            }
+        }
+    }
+    //your code
+    print_r($obj);
+}
+```
+注：redis的数据是二进制的，所以输出的json内容是[]byte格式，
 
 
