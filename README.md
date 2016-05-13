@@ -42,7 +42,7 @@ rdb_viewer -json -val hd.rdb|php script/parse.php
 ```
 
 
-[script/parse.php](srcipt/parse.php) 的内容大致如下
+[script/parse.php](/srcipt/parse.php) 的内容大致如下
 ```php
 <?php
 while(!feof(STDIN)){
@@ -60,6 +60,7 @@ while(!feof(STDIN)){
     print_r($obj);
 }
 ```
-注：redis的数据是二进制的，所以输出的json内容是[]byte格式，
+注：redis的数据是二进制的，key,value,member,field都是二进制的，输出的json内容中的字段均以`_b`结尾，如`key_b`
+`$key`=base64_decode(`$key_b`)
 
 
