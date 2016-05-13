@@ -42,7 +42,7 @@ rdb_viewer -json -val hd.rdb|php script/parse.php
 ```
 
 
-[script/parse.php](/srcipt/parse.php) 的内容大致如下
+`script/parse.php` 的内容大致如下
 ```php
 <?php
 while(!feof(STDIN)){
