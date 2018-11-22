@@ -5,17 +5,20 @@
 package main
 
 import (
-	"encoding/json"
+	//	"encoding/json"
 	"flag"
 	"fmt"
 	"github.com/cupcake/rdb"
 	"github.com/cupcake/rdb/nopdecoder"
+	"github.com/json-iterator/go"
 	"os"
 	"strings"
 )
 
-var version = "0.3 20160513"
+var version = "0.4 20181122"
 var jsonType = flag.Bool("json", false, "print as json")
+
+var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 const (
 	kTypeString    string = "string"
