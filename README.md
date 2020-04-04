@@ -1,6 +1,6 @@
 # rdb-viewer
 
-redis rdb文件解析工具  v0.3
+redis rdb文件解析工具 
 
 
 ## install

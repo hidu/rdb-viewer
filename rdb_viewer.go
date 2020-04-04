@@ -1,24 +1,18 @@
-// This is a very basic example of a program that implements rdb.decoder and
-// outputs a human readable diffable dump of the rdb file.
-// copy from github.com/cupcake/rdb/examples/diff.go
-
 package main
 
 import (
-	//	"encoding/json"
+	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/cupcake/rdb"
-	"github.com/cupcake/rdb/nopdecoder"
-	"github.com/json-iterator/go"
 	"os"
 	"strings"
+
+	"github.com/cupcake/rdb"
+	"github.com/cupcake/rdb/nopdecoder"
 )
 
-var version = "0.4 20181122"
+var version = "0.5.2020040418"
 var jsonType = flag.Bool("json", false, "print as json")
-
-var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 const (
 	kTypeString    string = "string"
