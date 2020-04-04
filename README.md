@@ -3,13 +3,12 @@
 redis rdb文件解析工具 
 
 
-## install
+## 安装
 ```
-export GO15VENDOREXPERIMENT=1
 go get -u github.com/hidu/rdb-viewer
 ```
 
-## useage
+## 使用
 
 ### 基本用法
 ```
